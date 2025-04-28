@@ -56,8 +56,9 @@
 % \ignorespacetoks %
 %------------------%
 
+%
 \def \ignorespacetoks #1{\let\afterignore#1\ignorespacetoksA}
-
+%
 \def \ignorespacetoksA {\futurelet\tmptokenA\ignorespacetoksB}
 % \ignorespacetoksB decides what to do based on what \tmptokenA is
 \def \ignorespacetoksB {%
@@ -195,3 +196,29 @@
 \def \mathboxT #1{\hbox{#1}}
 \def \mathboxS #1{\hbox{\currfontsize=0.7\currfontsize \selectfont\selectmathfont #1}}
 \def \mathboxSS #1{\hbox{\currfontsize=0.5\currfontsize \selectfont\selectmathfont #1}}
+
+%-----------------------------------%
+% Other utilitity macros for layout %
+%-----------------------------------%
+
+\def \skiplines #1 {%
+  \tmpdimenA=#1\baselineskip \relax
+  \ifdim\lastskip<\tmpdimenA \removelastskip \vskip\tmpdimenA \fi}
+
+\long\def \ignorepar {\futurelet\ignoreparZ\ignoreparA}
+\long\def \ignoreparA {%
+  \ifx \ignoreparZ\par \ea\ignoreparB
+  \else \undef\ignoreparZ \fi}
+\long\def \ignoreparB #1{\ignorepar}
+
+% Taken from OpTeX source code
+\def \firstnoindent {%
+  \global\everypar{%
+    \global\everypar={}%
+    \setbox7=\lastbox}}
+
+% Redefinition of plain TeX's \strut, new scales with baselineskip
+\def \strut {\vrule
+    height 0.75\baselineskip
+    depth 0.25\baselineskip
+    width \z@ \relax}
