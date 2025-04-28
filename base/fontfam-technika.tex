@@ -1,0 +1,51 @@
+%===========%
+% Modifiers %
+%===========%
+
+% Font weights
+\def \Technika@light        {\edef\Technika@@weight{Light}}
+\def \Technika@book         {\edef\Technika@@weight{Book}}
+\def \Technika@regular      {\edef\Technika@@weight{Regular}}
+\def \Technika@bold         {\edef\Technika@@weight{Bold}}
+
+% Italic font
+\def \Technika@upright      {\edef\Technika@@style{}}
+\def \Technika@italic       {\edef\Technika@@style{Italic}}
+
+% Defaults
+\Technika@book \Technika@upright
+
+%===========%
+% Font name %
+%===========%
+
+% Auxiliary definitions
+\def \Technika@@regularweight {Regular}
+
+% Normal font
+\def \Technika@currfontname {%
+  [Technika-%
+  % Regular+Italic -> only Italic
+  \ifx \Technika@@weight\Technika@@regularweight
+    \ifx \Technika@@style\empty \Technika@@regularweight
+    \else \Technika@@style \fi
+  \else \Technika@@weight\Technika@@style \fi]:}
+
+%============%
+% The switch %
+%============%
+
+% Auxiliary definitions
+\def \Technika@makepublic #1{%
+  \ea\let \ea#1\csname Technika@\csstring#1\endcsname}
+\def \Technika@publicmacros {%
+  \light \book \regular \bold \upright \italic \currfontname \fontcleanup}
+
+% Font setup & cleanup
+\def \Technika@fontcleanup {%
+  \ea\foreach \ea{\Technika@publicmacros}\undef}
+\def \Technika@fontsetup {%
+  \ea\foreach \ea{\Technika@publicmacros}\Technika@makepublic}
+
+% The switch
+\def \Technika {\fontcleanup \Technika@fontsetup}

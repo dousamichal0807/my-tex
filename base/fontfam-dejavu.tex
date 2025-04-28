@@ -1,0 +1,56 @@
+%===========%
+% Modifiers %
+%===========%
+
+% Sub-family
+\def \DejaVu@serif          {\edef\DejaVu@@subfam{Serif}}
+\def \DejaVu@sans           {\edef\DejaVu@@subfam{Sans}}
+\def \DejaVu@mono           {\edef\DejaVu@@subfam{SansMono}}
+
+% Font weight
+\def \DejaVu@regular        {\edef\DejaVu@@weight{}}
+\def \DejaVu@bold           {\edef\DejaVu@@weight{Bold}}
+
+% Italic font
+\def \DejaVu@upright        {\edef\DejaVu@@style{}}
+\def \DejaVu@oblique        {\edef\DejaVu@@style{Oblique}}
+
+% Defaults
+\DejaVu@serif \DejaVu@regular \DejaVu@upright
+
+%===========%
+% Font name %
+%===========%
+
+% Auxiliary definitions
+\def \DejaVu@@fontvariant {\DejaVu@@weight\DejaVu@@style}
+
+% Normal font
+\def \DejaVu@currfontname{%
+  [DejaVu\DejaVu@@subfam
+  \if $\DejaVu@@fontvariant$\else -\fi
+  \DejaVu@@fontvariant]:}
+
+% Math font
+% TODO: Use TeX Gyre DejaVu Math
+
+%============%
+% The switch %
+%============%
+
+% Auxiliary definitions
+\def \DejaVu@makepublic #1{%
+  \ea\let \ea#1\csname DejaVu@\csstring#1\endcsname}
+\def \DejaVu@publicmacros {%
+  \serif \sans \mono \upright \oblique \currfontname \fontcleanup}
+  % TODO: Add \currmathfontname when implemented
+
+% Font setup & cleanup
+\def \DejaVu@fontsetup {%
+  \fontcleanup
+  \ea\foreach \ea{\DejaVu@publicmacros}\DejaVu@makepublic}
+\def \DejaVu@fontcleanup {%
+  \ea\foreach\ea{\DejaVu@publicmacros}\undef}
+
+% The switch
+\let \DejaVu=\DejaVu@fontsetup

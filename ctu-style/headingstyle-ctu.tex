@@ -1,0 +1,86 @@
+%----------%
+% Settings %
+%----------%
+
+\def \CTU@chapterstripecolor {}
+\def \CTU@chaptertitlestyle {}
+\def \CTU@chapternumberstyle {}
+
+%-------------------%
+% \CTU@printchapter %
+%-------------------%
+
+% Macro for typesetting heading of a chapter
+\def \CTU@printchapter #1#2{%
+  \vfill\supereject
+  % Start on the right (i.e. odd) page
+  \ifodd\pageno \else \par\null\vfill\eject \fi
+  \par\null \skiplines 3 \par\noindent
+  \CTU@printchapterstripe
+  \CTU@printchaptertitle{#2}\hfil
+  \CTU@printchapternumber{#1}%
+  % Space under the heading
+  \par\skiplines 3 
+  \firstnoindent}
+
+% The chapter stripe
+\def \CTU@printchapterstripe {%
+  \setbox\tmpboxA=\hbox to0pt{{%
+    \hskip -\hoffset
+    \CTU@chapterstripecolor 
+    \cleaders
+      \hbox to7mm{\hss\vrule width3.5mm height-4.5mm depth8mm\relax\hss}%
+      \hskip\pdfpagewidth
+    \hss}}%
+  \ht\tmpboxA=0pt \dp\tmpboxA=0pt
+  \box\tmpboxA}
+
+% Print the heading text
+\def \CTU@printchaptertitle #1{%
+  \setbox\tmpboxA=\hbox {{%
+    \hsize=0.8\hsize
+    \vbox{\hyphenpenalty=10000 \rightskip=0pt plus 1fill \CTU@chaptertitlestyle
+      \par\noindent \ignorespaces#1\endgraf}}}%
+  \ht\tmpboxA=0pt \dp\tmpboxA=0pt
+  \box\tmpboxA}
+
+% Print chapter number
+\def \CTU@printchapternumber #1{%
+  \setbox\tmpboxA=\hbox to 0.2\hsize {{%
+    \hyphenpenalty=10000 \CTU@chapternumberstyle 
+    \hss #1}}%
+  \ht\tmpboxA=0pt \dp\tmpboxA=0pt \box\tmpboxA}
+
+%-------------------%
+% \CTU@printsection %
+%-------------------%
+
+% Macro for typesetting heading of a section
+\def \CTU@printsection #1#2{%
+  % Make sure to maintain \topskip if the section starts on a new page
+  \skiplines 2 \par\null
+  \nobreak \vskip-\baselineskip
+  \nobreak \par\noindent
+  \if ^#1^\else {\CTU@sectionnumberstyle#1\quad} \fi
+  {\CTU@sectiontitlestyle\ignorespaces#2}\endgraf
+  \nobreak \skiplines 1
+  \firstnoindent}
+
+%----------------------%
+% \CTU@printsubsection %
+%----------------------%
+
+% Macro for typesetting heading of a subsection
+\def \CTU@printsubsection #1#2{%
+  \skiplines 1 \par\null
+  \nobreak \vskip-0.75\baselineskip
+  \nobreak \par\noindent
+  {\basefontsize=12pt \baselineskip=12pt
+    \sansfam\uprightstyle
+    \if ^#1^\else {\CtuBlue \xboldweight\applyfont #1\quad \Black}\fi
+    {\boldweight\applyfont \ignorespaces#2}%
+    \endgraf}%
+  \nobreak \vskip -1.25\baselineskip
+  \nobreak \null
+  \nobreak \skiplines 1
+  \firstnoindent}

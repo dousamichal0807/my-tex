@@ -1,0 +1,45 @@
+%===============%
+% Color support %
+%===============%
+
+% Switches for enabling change of color
+\newif \ifsetstroke     \setstroketrue
+\newif \ifsetfill       \setfilltrue
+
+%-------------------------------------------------%
+% The color "stack", without using \pdfcolorstack %
+%-------------------------------------------------%
+
+% Black is default stroke and fill color
+\def \currstrokecolor {0 G}
+\def \currfillcolor {0 g}
+% Set color based on \currstrokecolor and \currfillcolor macros
+\def \resetcolor {\pdfliteral{\currstrokecolor\space\currfillcolor}}
+
+%-----------%
+% \setcolor %
+%-----------%
+
+\def \setcolor #1#2#3{%
+  \ifsetstroke \def\currstrokecolor{#1 #2}\pdfliteral{#1 #2}\fi
+  \ifsetfill   \def\currfillcolor  {#1 #3}\pdfliteral{#1 #3}\fi
+  \aftergroup\resetcolor}
+
+%-----------------------%
+% Color changing macros %
+%-----------------------%
+
+\def \cmyk [#1]{\setcolor{#1}{K}{k}}
+\def \gray [#1]{\setcolor{#1}{G}{g}}
+\def \rgb  [#1]{\setcolor{#1}{RG}{rg}}
+
+%----------------------------%
+% \...def variants for color %
+%----------------------------%
+
+\def \cmykdef #1[#2]{\def#1{\cmyk[#2]}}
+\def \graydef #1[#2]{\def#1{\gray[#2]}}
+\def \rgbdef  #1[#2]{\def#1{\rgb[#2]}}
+
+\def \hcdef #1[#2][#3]{%
+  \def#1{\ifprintversion\cmyk[#2]\else\rgb[#3]\fi}}

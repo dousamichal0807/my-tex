@@ -1,0 +1,197 @@
+%---------------------%
+% Temporary registers %
+%---------------------%
+
+\newbox   \tmpboxA
+\newbox   \tmpboxB
+\newcount \tmpcountA
+\newcount \tmpcountB
+\newdimen \tmpdimenA
+\newdimen \tmpdimenB
+
+%--------------------------%
+% Print/electronic variant %
+%--------------------------%
+
+\newif \ifprintversion
+\printversiontrue
+
+%------------------%
+% Basic shorthands %
+%------------------%
+
+% Shorthand for \expandafter
+\let \ea=\expandafter
+% Un-\def a control sequence or active character
+\def \undef #1{\let#1\undefined}
+% Define control sequence with name specified in <balanced text>
+\def \defbyname #1{\ea\def\csname#1\endcsname}
+
+%------------------%
+% \foreach, \xargs %
+%------------------%
+
+% Require `{` after \foreach
+\def \foreach #{\foreachA}
+
+\def \foreachA #1#2{\foreachB#2#1\foreachC\foreachD}
+\def \foreachB #1#2#3\foreachD {\ifx #2\foreachC \else #1{#2}\foreachB #1#3\foreachD \fi}
+% \foreachC and \foreachD are "sentinels" that should never be expanded:
+\def \foreachC {\error{\string\foreachC has been expanded!}}
+\def \foreachD {\error{\string\foreachD has been expanded!}}
+
+\def \xargs #1#2;{\foreachB#1#2\foreachC\foreachD}
+
+%---------------------%
+% \scantoeol, \eoldef %
+%---------------------%
+
+\def \scantoeol {\bgroup \catcode`\^^M=13 \scantoeolA}
+{\catcode`\^^M=13 \gdef\scantoeolA#1#2^^M{\egroup #1{#2}}}
+\def \eoldef #1#2#{%
+  \edef#1{\noexpand\scantoeol \ea\noexpand\csname _eoldef:\csstring#1\endcsname}
+  \ea\def \csname _eoldef:\csstring#1\endcsname#2}
+
+%------------------%
+% \ignorespacetoks %
+%------------------%
+
+\def \ignorespacetoks #1{\let\afterignore#1\ignorespacetoksA}
+
+\def \ignorespacetoksA {\futurelet\tmptokenA\ignorespacetoksB}
+% \ignorespacetoksB decides what to do based on what \tmptokenA is
+\def \ignorespacetoksB {%
+  \ifcat\space\tmptokenA \ea\ignorespacetoksC
+  \else \ea\afterignore \fi}
+% \ignorespacetoksC gobbles the space and "inserts" \ignorespacetoksA token
+\def \ignorespacetoksC {\afterassignment\ignorespacetoks \let\tmptokenA= }
+
+%-------------------------%
+% \readopt, \readoptional %
+%-------------------------%
+
+% \readopt loads next token and delegates main work to \readoptA
+\def \readopt #1{\let\afteropt#1\futurelet\tmptokenA\readoptA}
+% \readoptA decides what to do based on what \tmptokenA is
+\def \readoptA {\ifx[\tmptokenA \ea\readoptB \else \ea\readoptC \fi}
+% \readoptB loads the optional parameter
+\def \readoptB [#1]{\def\theoptional{#1}\afteropt}
+% \readoptC undefines \theoptional and expands to \afteropt
+\def \readoptC {\undef\theoptional \ignorespacetoks\afteropt}
+
+\let \readoptional=\readopt
+
+%----------------%
+% \protecttokens %
+%----------------%
+
+% The \protecttokens macro converts given token sequence to sequence suitable
+% to be written to file using \write by doing following:
+%   (1) \catcode of begin-group and end-group character and space tokens (left
+%       and right curly brace, ASCII space, ASCII horizontal tabulator) changes
+%       to 12 (other).
+%   (2) \string primitive is applied to each token of token list trasformed as
+%       specified by (1).
+%   (3) The final token list will be saved into \protectedtokens.
+
+\def \protecttokens #1{
+  \bgroup
+  \catcode`\{=12 \catcode`\}=12
+  \catcode`\ =12 \catcode`\^^I=12
+  \xdef\protectedtokens {\ea\foreach\ea{\scantextokens{#1}}\protecttoken}%
+  \egroup}
+\def \protecttoken #1{\string#1}
+
+%---------------------------%
+% Flavors of \the primitive %
+%---------------------------%
+
+% \Athe and \athe take \count register as its argument and converts it into
+% a letter: 1-->"A"/"a", 2-->"B"/"b", ..., 26-->"Z"/"z", "??" otherwise.
+\def \athe #1{\ifcase#1??\or
+  a\or b\or c\or d\or e\or f\or g\or h\or i\or j\or k\or l\or m\or
+  n\or o\or p\or q\or r\or s\or t\or u\or v\or w\or x\or y\or z\else ??\fi}
+\def \Athe #1{\ifcase#1??\or
+  A\or B\or C\or D\or E\or F\or G\or H\or I\or J\or K\or L\or M\or
+  N\or O\or P\or Q\or R\or S\or T\or U\or V\or W\or X\or Y\or Z\else ??\fi}
+
+%----------%
+% Messages %
+%----------%
+
+% Warnings
+\def \warn #1{\message{^^J>>> WARNING! #1^^J}}
+% Debug messages
+\def \debugmsg #1{\message{^^J>>> DEBUG: #1^^J}}
+% Messages intended for tracing user errors
+\newcount\showtracemessages
+\def \tracemsg #1{\ifnum\showtracemessages>\z@ \message{^^J>>> TRACE: #1^^J}\fi}
+\showtracemessages=1
+
+%-------------------------------------%
+% Redefinition of glue macros, \?, \. %
+%-------------------------------------%
+
+\newdimen \thinspaceamount       \thinspaceamount=0.16667em
+\newdimen \verythinspaceamount   \verythinspaceamount=0.06667em
+
+\def \negthinspace      {\ifmmode \mskip-\thinmuskip \else \kern-\thinspaceamount \fi}
+\def \thinspace         {\ifmmode \mskip \thinmuskip \else \kern \thinspaceamount \fi}
+\def \negverythinspace  {\kern-\verythinspaceamount}
+\def \verythinspace     {\kern \verythinspaceamount}
+
+\let \!=\negthinspace
+\let \,=\thinspace
+\let \?=\negverythinspace
+\let \.=\verythinspace
+
+%-------%
+% Logos %
+%-------%
+
+\def \TeX {T\kern -0.1667em\relax \lower 0.5ex\hbox{E}\kern -0.125em\relax X}
+\def \pdfTeX {pdf\TeX}
+\def \LaTeX {L\kern 0.16em\llap{\raise 0.20em\hbox{\the\scriptfont0 A}}\kern -0.16em\TeX}
+\def \OpTeX {Op\kern -0.1em\relax \TeX}
+\def \LuaTeX {Lua\TeX}
+\def \XeTeX {X\kern -0.125em\relax
+  \phantom E\pdfsave \rlap{\pdfsetmatrix{-1 0 0 1}\lower0.5ex\hbox{E}}\pdfrestore
+  \kern -0.1667em\relax \TeX}
+
+%------------------------------------------------%
+% \include, \includedir, \includesub, \softinput %
+%------------------------------------------------%
+
+\let \currentdir=\empty
+% Used by \softinput to test file existence
+\newread \softinputread
+\newif \iffilemissing
+
+\def \includesub #1:#2 {{%
+  \edef\includesubZ{#1}%
+  \ifx \includesubZ\empty \else
+    \edef\currentdir{\currentdir\includesubZ/}%
+  \fi \undef\includesubZ \input{\currentdir#2}}}
+
+\def \includedir #1 {\includesub#1:main }
+
+\def \include #1 {\includesub:#1 }
+
+\def \softinput#1 {%
+  \openin \softinputread=#1
+  \ifeof \softinputread
+    \def\softinputZ{\undef\softinputZ \filemissingtrue}%
+  \else
+    \closein\softinputread
+    \def\softinputZ{\undef\softinputZ \filemissingfalse \input{#1}}%
+  \fi \softinputZ}
+
+%----------%
+% \mathbox %
+%----------%
+
+\def \mathbox #{\mathboxA}
+\def \mathboxA #1{\mathchoice{\mathboxT{#1}}{\mathboxT{#1}}{\mathboxS {#1}}{\mathboxSS{#1}}}
+\def \mathboxT #1{\hbox{#1}}
+\def \mathboxS #1{\hbox{\currfontsize=0.7\currfontsize \selectfont\selectmathfont #1}}
+\def \mathboxSS #1{\hbox{\currfontsize=0.5\currfontsize \selectfont\selectmathfont #1}}

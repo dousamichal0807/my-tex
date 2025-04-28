@@ -1,0 +1,101 @@
+% Taken from the reference manual of LuaTeX 1.18, February 2024, section 3.2.2:
+
+% \pdfextensions 
+\protected\def\pdfliteral        {\pdfextension literal}
+\protected\def\pdflateliteral    {\pdfextension lateliteral}
+\protected\def\pdfcolorstack     {\pdfextension colorstack}
+\protected\def\pdfsetmatrix      {\pdfextension setmatrix}
+\protected\def\pdfsave           {\pdfextension save\relax}
+\protected\def\pdfrestore        {\pdfextension restore\relax}
+\protected\def\pdfobj            {\pdfextension obj }
+\protected\def\pdfrefobj         {\pdfextension refobj }
+\protected\def\pdfannot          {\pdfextension annot }
+\protected\def\pdfstartlink      {\pdfextension startlink }
+\protected\def\pdfendlink        {\pdfextension endlink\relax}
+\protected\def\pdfoutline        {\pdfextension outline }
+\protected\def\pdfdest           {\pdfextension dest }
+\protected\def\pdfthread         {\pdfextension thread }
+\protected\def\pdfstartthread    {\pdfextension startthread }
+\protected\def\pdfendthread      {\pdfextension endthread\relax}
+\protected\def\pdfinfo           {\pdfextension info }
+\protected\def\pdfcatalog        {\pdfextension catalog }
+\protected\def\pdfnames          {\pdfextension names }
+\protected\def\pdfincludechars   {\pdfextension includechars }
+\protected\def\pdffontattr       {\pdfextension fontattr }
+\protected\def\pdfmapfile        {\pdfextension mapfile }
+\protected\def\pdfmapline        {\pdfextension mapline }
+\protected\def\pdftrailer        {\pdfextension trailer }
+\protected\def\pdfglyphtounicode {\pdfextension glyphtounicode }
+\protected\def\pdfrunninglinkoff {\pdfextension linkstate 1 }
+\protected\def\pdfrunninglinkon  {\pdfextension linkstate 0 }
+
+% \pdffeedbacks 
+\def\pdftexversion        {\numexpr\pdffeedback version\relax}
+\def\pdftexrevision               {\pdffeedback revision}
+\def\pdflastlink          {\numexpr\pdffeedback lastlink\relax}
+\def\pdfretval            {\numexpr\pdffeedback retval\relax}
+\def\pdflastobj           {\numexpr\pdffeedback lastobj\relax}
+\def\pdflastannot         {\numexpr\pdffeedback lastannot\relax}
+\def\pdfxformname         {\numexpr\pdffeedback xformname\relax}
+\def\pdfcreationdate              {\pdffeedback creationdate}
+\def\pdffontname          {\numexpr\pdffeedback fontname\relax}
+\def\pdffontobjnum        {\numexpr\pdffeedback fontobjnum\relax}
+\def\pdffontsize          {\dimexpr\pdffeedback fontsize\relax}
+\def\pdfpageref           {\numexpr\pdffeedback pageref\relax}
+\def\pdfcolorstackinit            {\pdffeedback colorstackinit}
+
+% \pdfvariables 
+\edef\pdfcompresslevel            {\pdfvariable compresslevel}
+\edef\pdfobjcompresslevel         {\pdfvariable objcompresslevel}
+\edef\pdfrecompress               {\pdfvariable recompress}
+\edef\pdfdecimaldigits            {\pdfvariable decimaldigits}
+\edef\pdfgamma                    {\pdfvariable gamma}
+\edef\pdfimageresolution          {\pdfvariable imageresolution}
+\edef\pdfimageapplygamma          {\pdfvariable imageapplygamma}
+\edef\pdfimagegamma               {\pdfvariable imagegamma}
+\edef\pdfimagehicolor             {\pdfvariable imagehicolor}
+\edef\pdfimageaddfilename         {\pdfvariable imageaddfilename}
+\edef\pdfpkresolution             {\pdfvariable pkresolution}
+\edef\pdfpkfixeddpi               {\pdfvariable pkfixeddpi}
+\edef\pdfinclusioncopyfonts       {\pdfvariable inclusioncopyfonts}
+\edef\pdfinclusionerrorlevel      {\pdfvariable inclusionerrorlevel}
+\edef\pdfignoreunknownimages      {\pdfvariable ignoreunknownimages}
+\edef\pdfgentounicode             {\pdfvariable gentounicode}
+\edef\pdfomitcidset               {\pdfvariable omitcidset}
+\edef\pdfomitcharset              {\pdfvariable omitcharset}
+\edef\pdfomitinfodict             {\pdfvariable omitinfodict}
+\edef\pdfomitmediabox             {\pdfvariable omitmediabox}
+\edef\pdfpagebox                  {\pdfvariable pagebox}
+\edef\pdfminorversion             {\pdfvariable minorversion}
+\edef\pdfuniqueresname            {\pdfvariable uniqueresname}
+\edef\pdfhorigin                  {\pdfvariable horigin}
+\edef\pdfvorigin                  {\pdfvariable vorigin}
+\edef\pdflinkmargin               {\pdfvariable linkmargin}
+\edef\pdfdestmargin               {\pdfvariable destmargin}
+\edef\pdfthreadmargin             {\pdfvariable threadmargin}
+\edef\pdfxformmargin              {\pdfvariable xformmargin}
+\edef\pdfpagesattr                {\pdfvariable pagesattr}
+\edef\pdfpageattr                 {\pdfvariable pageattr}
+\edef\pdfpageresources            {\pdfvariable pageresources}
+\edef\pdfxformattr                {\pdfvariable xformattr}
+\edef\pdfxformresources           {\pdfvariable xformresources}
+\edef\pdfpkmode                   {\pdfvariable pkmode}
+\edef\pdfsuppressoptionalinfo     {\pdfvariable suppressoptionalinfo }
+\edef\pdftrailerid                {\pdfvariable trailerid }
+
+% Taken from the reference manual of LuaTeX 1.18, February 2024, section 3.2.4:
+
+\let\pdfpagewidth       \pagewidth
+\let\pdfpageheight      \pageheight
+\let\pdfadjustspacing   \adjustspacing
+\let\pdfprotrudechars   \protrudechars
+\let\pdfnoligatures     \ignoreligaturesinfont
+\let\pdffontexpand      \expandglyphsinfont
+\let\pdfcopyfont        \copyfont
+\let\pdfxform           \saveboxresource
+\let\pdflastxform       \lastsavedboxresourceindex
+\let\pdfrefxform        \useboxresource
+\let\pdfximage          \saveimageresource
+\let\pdflastximage      \lastsavedimageresourceindex
+\let\pdflastximagepages \lastsavedimageresourcepages
+\let\pdfrefximage       \useimageresource

@@ -1,0 +1,102 @@
+%================%
+% Reference file %
+%================%
+
+% Test for label existence, use with LuaTeX's \ifcondition
+\def \labelexists #1{\ifcsname lreftype:#1\endcsname}
+
+% Handling not defined labels
+\let \referrorcolor=\RedRgb
+\def \referrorlabel {??}
+\def \referror {\referrorcolor\referrorlabel\Black}
+
+% Referencing labelled objects
+\def \numref [#1]{%
+  \ifcondition\labelexists{#1}\csname lrefnum:#1\endcsname
+  \else \referror \fi}
+\def \nameref [#1]{%
+  \ifcondition\labelexists{#1}\csname lrefname:#1\endcsname
+  \else \referror \fi}
+\def \pgref [#1]{%
+  \ifcondition\labelexists{#1}\csname lrefpg:#1\endcsname
+  \else \referror \fi}
+
+% Token register where references will be saved
+\newtoks \refcontent
+
+%------------------------%
+% Loading reference file %
+%------------------------%
+
+% \Xref arguments
+% #1 ... label (user-defined), may be empty
+% #2 ... object type, e.g. {chapter}, {figure}, etc.
+% #3 ... object number, e.g. {1.1}, {5.2.4}, {A}, etc.
+% #4 ... object name
+% #5 ... page number
+\def \loadreffile {{
+  \def \Xref ##1##2##3##4##5{%
+    \gtoksapp \refcontent {\processref{##2}{##3}{##4}{##5}}
+    \if ^##1^\else
+      \ifcondition \labelexists{##1}%
+        \warn{Label ##1 is used at least twice, ignoring duplicate label...}%
+      \else
+        \ea\gdef \csname lreftype:##1\endcsname {##2}%
+        \ea\gdef \csname lrefnum:##1\endcsname {##3}%
+        \ea\gdef \csname lrefname:##1\endcsname {##4}%
+        \ea\gdef \csname lrefpg:##1\endcsname {##5}%
+      \fi
+    \fi}%
+  \softinput out/\jobname.ref.tex
+  \iffilemissing
+    \warn{Reference file (out/\jobname.ref.tex) is missing. TeX this document at
+          least two more times!}
+  \fi}}
+
+%---------------------------%
+% Writing to reference file %
+%---------------------------%
+
+% Open reference file for writing
+\newwrite \reffile
+\openout \reffile=\jobname.ref.tex
+
+\newdimen \reflastskip
+
+% Write to reference file
+% #1 ... label (user-defined), may be empty
+% #2 ... object type, e.g. {chapter}, {figure}, etc.
+% #3 ... object number, e.g. {1.1}, {5.2.4}, {A}, etc.
+% #4 ... object name
+\def \writeref #1#2#3#4{%
+  \reflastskip=\lastskip
+  \ifdim \lastskip=\z@ \else \vskip -\lastskip \fi
+  \edef\writerefZ{#1}%
+  \ifx \writerefZ\empty \else
+    \ifcondition\labelexists{#1}\else
+      \warn{Label [#1] has not been seen yet. TeX me at least once again.}%
+    \fi
+  \fi
+  \protecttokens{#4}%
+  \edef \writerefZ {%
+    \write \reffile {%
+      \string\Xref {#1}{#2}{#3}{\protectedtokens}{\noexpand\folio}}}%
+  \writerefZ \undef\writerefZ
+  \ifdim \reflastskip=\z@ \else \vskip\reflastskip\relax \fi}
+
+
+%==========================%
+% Bibliographic references %
+%==========================%
+
+\def \bib [#1]{\edef\thebib{#1}\readoptional\bibA}
+\def \bibA {%
+  \leavevmode \hbox{%
+    [{\enablesmallcaps\selectfont \thebib}%
+    \ifcsname theoptional\endcsname, \theoptional\fi]%
+  }}
+
+% Citation macros
+\def \cite #{\citeA}
+\def \citeA #1{{\it ``#1''\/}}
+\def \ellipsis {\hbox{(.\,.\,.)}}

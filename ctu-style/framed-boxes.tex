@@ -1,0 +1,147 @@
+%================%
+% Framed regions %
+%================%
+
+\newbox   \framedsiderulebox
+\newbox   \framedbox
+\newdimen \framedsiderulewidth  \framedsiderulewidth=2pt
+\newdimen \framedhpadding       \framedhpadding=8pt
+\newdimen \framedvpadding       \framedvpadding=5pt
+\newdimen \framedinnerpadding   \framedinnerpadding=8pt
+
+\def \framedheaderfont {}
+\def \framedcontentfont {}
+
+\def \beginframed {%
+  \skiplines 1
+  % Save the material inside \framedbox
+  \setbox \framedbox=\vtop \bgroup
+    % Make content narrower by the \framedsiderulewidth, \framedhpadding from
+    % both sides, 2\baselineskip for the pictogram and \framedinnerpadding for
+    % space between the framed and the pictogram:
+    \advance \hsize by -\framedsiderulewidth
+    \advance \hsize by -2\framedhpadding
+    \advance \hsize by -2\baselineskip
+    \advance \hsize by -\framedinnerpadding
+    % See \strut in defs/layout.tex
+    \par\noindent \strut {\basefontsize=1.05\basefontsize
+      \framedheaderfont \framedlabel}\endgraf \framedcontentfont
+    \firstnoindent}
+
+\def \endframed {%
+    % Finish \framedbox from \beginframed
+    \endgraf \vskip -\baselineskip
+    \par\leavevmode \strut\hfill \endgraf
+  \egroup
+  % Depth of \framedbox must be at least 1.25 * b:
+  \ifdim \dp\framedbox<1.25\baselineskip \dp\framedbox=1.25\baselineskip \fi
+  \ht\framedbox=0.75\baselineskip
+  % Create the vertical rule, \framedvpadding higher and deeper than \framedbox.
+  % Calculate vertical rule height (\tmpdimenA) and depth (\tmpdimenB)
+  \tmpdimenA=\ht\framedbox \advance \tmpdimenA by \framedvpadding
+  \tmpdimenB=\dp\framedbox \advance \tmpdimenB by \framedvpadding
+  % Save the vertical rule inside \framedsiderulebox together with rule for
+  % background color:
+  \setbox \framedsiderulebox=\hbox to \hsize{%
+    % The side rule
+    \framedsiderulecolor
+    \vrule height \tmpdimenA depth \tmpdimenB width \framedsiderulewidth \relax
+    % The background
+    \framedbgcolor
+    \leaders \hrule height \tmpdimenA depth \tmpdimenB \hfill
+    % Reset color
+    \Black}%
+  % Reset height and depth of \framedsiderulebox:
+  \dp\framedsiderulebox=\z@
+  \ht\framedsiderulebox=\z@
+  % Calculate total height (\tmpdimenA := \ht + \dp) of \framedbox
+  \tmpdimenA=\ht\framedbox
+  \advance\tmpdimenA by \dp\framedbox \relax
+  % Assemble final box
+  \setbox \tmpboxA=\hbox{%
+    \box\framedsiderulebox
+    \hskip -\hsize \hskip \framedsiderulewidth \hskip \framedhpadding
+    \hbox to 2\baselineskip {\framedicon \hss}%
+    \hskip \framedinnerpadding
+    \box \framedbox}%
+  % Output the box
+  \ht\tmpboxA=\z@ \dp\tmpboxA=\z@
+  \par\noindent \leavevmode \lower 0.5\baselineskip \hbox{\box\tmpboxA} \endgraf
+  \nobreak\vskip \tmpdimenA
+  \nobreak\vskip -\baselineskip
+  \nobreak\null
+  \firstnoindent
+  \skiplines 1 }
+
+%=======%
+% Notes %
+%=======%
+
+\def \notelabel {Note}
+
+\def \noteicon {%
+  \pdfliteral{q}% begin PDF group
+  \framedsiderulecolor
+  \pdfliteral{%
+    % scale 1bp -> 1pt
+    0.996264 0 0.996264 0 0 0 cm
+    1 w   0 j   0 J
+    % sticky note
+    19 3.5 m   1 -1 l   4 -13 l   4.25 -14 8 -16.25 9 -16 c   23 -12.5 l   h
+    % sticky note fold
+    4 -13 m   4.25 -14 5 -14 7 -13 c   7.5 -15.5 8 -16.25 9 -16 c   S
+    % pin head
+    3 5 m   1.5 3.5 3 2 4.5 3.5 c   6 5 4.5 6.5 3 5 c   h   B
+    5 3 m   3.5 1.5 4.5 0.5 6 2 c   7.5 3.5 6.5 4.5 5 3 c   h   B
+    % pin needle
+    q   1 J   4 4 m   9 -1 l   S   Q
+    % the letter i
+    11 -3 2 2 re   11 -12 2 7.5 re   f
+    % end PDF group
+    Q}}
+
+\def \beginnote {%
+  \bgroup
+  \let \framedicon=\noteicon
+  \let \framedbgcolor=\CtuBlueLLLL
+  \let \framedsiderulecolor=\CtuBlue
+  \let \framedlabel=\notelabel
+  \beginframed}
+\def \endnote {%
+  \endframed
+  \egroup}
+
+%==========%
+% Warnings %
+%==========%
+
+\def \warnlabel {Important}
+
+\def \warnicon {%
+  \pdfliteral{q}% begin PDF group
+  \framedsiderulecolor
+  \pdfliteral{%
+    % scale 1bp -> 1pt
+    0.996264 0 0.996264 0 0 0 cm
+    1 w   0 j    0 J
+    % triangle
+    11 5.5 m   11.5 6.5 12.5 6.5 13 5.5 c   23 -14.5 l
+    23.5 -15.5 23 -16.5 22 -16.5 c
+    2 -16.5 l   1 -16.5 0.5 -15.5 1 -14.5 c   h   S
+    % exclamation mark
+    11 -14 2 1.8 re   11.3 -11.1 m   12.7 -11.1 l   13 -5.5 l   13 0 l   11 0 l
+    11 -5.5 l   h   f
+    % end PDF group
+    Q}}
+
+\def \beginwarn {%
+  \bgroup
+  \let \framedicon=\warnicon
+  \let \framedsiderulecolor=\CtuOrange
+  \let \framedbgcolor=\CtuOrangeLLLL
+  \let \framedlabel=\warnlabel
+  \beginframed}
+
+\def \endwarn {%
+  \endframed
+  \egroup}

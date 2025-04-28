@@ -1,0 +1,21 @@
+\def \begincitations {%
+  \vfill \null \nobreak\vfill
+  \vbox\bgroup
+    \leftskip=0pt plus 1fil
+    \rightskip=0pt \parfillskip=0pt\relax}
+\def \endcitations {\egroup \eject}
+
+\def \citeauthorfont {}
+\def \citebibreffont {}
+\def \citecontentfont {}
+\def \citenamefont {}
+
+\def \begincite #1 \from[#2][#3] #4: #5 \endcite {%
+  \skiplines 1
+  {\citecontentfont ``#1''%
+  \setbox\tmpboxA=\hbox{''}%
+  \nobreak \kern-\wd\tmpboxA}\break
+  {\citeauthorfont --- \ignorespaces#4:}
+  {\citenamefont \ignorespaces#5}\break
+  {\citebibreffont \bib[#2][#3]}\Black\strut
+  \endgraf}

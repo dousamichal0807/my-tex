@@ -1,0 +1,61 @@
+% Load LuaTeX OpenType library
+\input luaotfload.sty
+
+%===========%
+% Font size %
+%===========%
+
+\newdimen \currfontsize
+
+% Default values
+\currfontsize=10pt
+\baselineskip=12pt
+
+% Setting font size
+\def \typosize [#1/#2]{%
+  \currfontsize=#1pt
+  \baselineskip=#2pt\relax}
+
+% Scaling font size
+\def \typoscale [#1/#2]{%
+  \currfontsize=#1\currfontsize
+  \baselineskip=#1\baselineskip \relax}
+
+%===============%
+% Font features %
+%===============%
+
+% Default ligatures (liga)
+\def \enablefontligs {\def\fontfeat@liga{}}
+\def \disablefontligs {\def\fontfeat@liga{-liga;}}
+
+% Small capitals (smcp)
+\def \enablesmallcaps {\def\fontfeat@smcp{+smcp;}}
+\def \disablesmallcaps {\def\fontfeat@smcp{}}
+
+% Artificial bold
+\def \emboldenfont #1{\def\fontfeat@embolden{embolden=#1;}}
+\def \noemboldenfont {\def\fontfeat@embolden{}}
+
+% Ligatures implemented by luaotfload.sty (tlig), same as in Computer Modern
+% fonts
+\def \enabletexligs {\def\fontfeat@tlig{+tlig;}}
+\def \disabletexligs {\def\fontfeat@tlig{}}
+
+% Default settings
+\enablefontligs \enabletexligs \disablesmallcaps \noemboldenfont
+
+% Suppressing unwanted ligatures
+\def \suppresslig {\nobreak \null \nobreak}
+
+%===========================%
+% \fontcleanup, \selectfont %
+%===========================%
+
+% When no OpenType font is loaded, there is nothing to do
+\let \fontcleanup=\relax
+
+\def \selectfont {%
+  \font \currfont=\currfontname \fontfeat@liga \fontfeat@tlig \fontfeat@smcp
+    \fontfeat@embolden \space at\currfontsize
+  \currfont}
