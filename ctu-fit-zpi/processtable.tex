@@ -1,0 +1,67 @@
+%================%
+% Process tables %
+%================%
+
+%----------%
+% Settings %
+%----------%
+
+\newdimen \ZPI@proctablabelwidth      \ZPI@proctablabelwidth=14pc
+\def \ZPI@proctablabelstyle {}
+
+%---------------%
+% The registers %
+%---------------%
+
+\def \ZPI@newtoks {\csname newtoks\endcsname}
+
+\def \ZPI@proctabregisters {%
+  \id \name \strategictargets \product \specification \owner \customers
+  \problems \metrics \startevent \conditions \infosystems \documentation}
+
+\def \ZPI@proctabnewtoks #1{%
+  \ea\ZPI@newtoks\csname ZPI@proctab\csstring#1\endcsname}
+
+\def \ZPI@proctabpublic #1{%
+  \ea\let\ea#1\csname ZPI@proctab\csstring#1\endcsname}
+
+\ea\foreach\ea{\ZPI@proctabregisters}\ZPI@proctabnewtoks
+
+%----------------%
+% The main macro %
+%----------------%
+
+\def \ZPI@processtable #{\ZPI@processtableA}
+\def \ZPI@processtableA #1{{\par
+  \ea\foreach\ea{\ZPI@proctabregisters}\ZPI@proctabpublic
+  #1\ZPI@printproctab}}
+
+%---------------%
+% \printproctab %
+%---------------%
+
+\def \ZPI@printproctab {%
+  \skiplines 1
+  \ea\foreach\ea{\ZPI@proctabregisters}\ZPI@printproctabrow
+  \ZPI@printproctabhrule
+  \skiplines 1 }
+
+\def \ZPI@printproctabhrule {
+  \par\noindent \leavevmode
+  \vrule width \hsize height 0.7ex depth -0.6ex
+  \endgraf}
+
+\def \ZPI@printproctabrow #1{%
+  \ZPI@printproctabhrule
+  \par\noindent {%
+    \leavevmode \hskip -\ZPI@proctablabelwidth
+    \hbox to\ZPI@proctablabelwidth {%
+      \kern 0.5em\relax
+      \ZPI@proctablabelstyle
+      \csname ZPI@proctab\csstring#1label\endcsname:%
+      \hskip 0.5em plus 1fil\relax}%
+    \leftskip=\ZPI@proctablabelwidth
+    \rightskip=0.5em plus 1fil
+    \parfillskip=0em plus 1fil
+    \hyphenpenalty=10000
+    \the #1 \endgraf}}
