@@ -2,7 +2,10 @@
 % Framed regions %
 %================%
 
-% Internal registers
+%--------------------%
+% Internal registers %
+%--------------------%
+
 \newbox \CTU@framedsiderulebox
 \newbox \CTU@framedbox
 
@@ -10,16 +13,10 @@
 % Settings %
 %----------%
 
-\newdimen \CTU@framedsiderulewidth
-\newdimen \CTU@framedhpadding
-\newdimen \CTU@framedvpadding
-\newdimen \CTU@framedinnerpadding
-
-% Default values
-\CTU@framedsiderulewidth=2pt
-\CTU@framedhpadding=8pt
-\CTU@framedvpadding=5pt
-\CTU@framedinnerpadding=8pt
+\newdimen \CTU@framedsiderulewidth    \CTU@framedsiderulewidth=2pt
+\newdimen \CTU@framedhpadding         \CTU@framedhpadding=8pt
+\newdimen \CTU@framedvpadding         \CTU@framedvpadding=5pt
+\newdimen \CTU@framedinnerpadding     \CTU@framedinnerpadding=8pt
 \def \CTU@framedheaderfont {}
 \def \CTU@framedcontentfont {}
 
@@ -44,7 +41,7 @@
     \endgraf \CTU@framedcontentfont \firstnoindent}
 
 \def \CTU@endframed {%
-    % Finish \CTU@framedbox from \beginframed
+    % Finish \CTU@framedbox from \CTU@beginframed
     \endgraf \vskip -\baselineskip
     \par\leavevmode \strut\hfill \endgraf
   \egroup
@@ -90,13 +87,18 @@
   \endenv{CTU@framed}%
   \firstnoindent\skiplines 1 }
 
-%=======%
-% Notes %
-%=======%
+%---------------------------%
+% Labels for framed regions %
+%---------------------------%
 
-\def \notelabel {Note}
+\def \CTU@notelabel {Note}
+\def \CTU@warnlabel {Important}
 
-\def \noteicon {\pdfliteral{%
+%--------------------------%
+% Icons for framed regions %
+%--------------------------%
+
+\def \CTU@noteicon {\pdfliteral{%
   % begin PDF group
   q
   % scale 1bp -> 1pt and set other defaults
@@ -116,42 +118,45 @@
   % end PDF group
   Q}}
 
-\def \beginnote {%
+\def \CTU@warnicon {\pdfliteral{%
+  % begin PDF group
+  q
+  % scale 1bp -> 1pt
+  0.996264 0 0.996264 0 0 0 cm
+  1 w   0 j    0 J
+  % triangle
+  11 5.5 m   11.5 6.5 12.5 6.5 13 5.5 c   23 -14.5 l
+  23.5 -15.5 23 -16.5 22 -16.5 c
+  2 -16.5 l   1 -16.5 0.5 -15.5 1 -14.5 c   h   S
+  % exclamation mark
+  11 -14 2 1.8 re   11.3 -11.1 m   12.7 -11.1 l   13 -5.5 l   13 0 l   11 0 l
+  11 -5.5 l   h   f
+  % end PDF group
+  Q}}
+
+%------------------%
+% \begin... macros %
+%------------------%
+
+\def \CTU@beginnote {%
   \beginenv{CTU@note}%
-  \let \CTU@framedicon=\noteicon
+  \let \CTU@framedicon=\CTU@noteicon
   \let \CTU@framedbgcolor=\CtuBlueLLLL
   \let \CTU@framedsiderulecolor=\CtuBlue
-  \let \CTU@framedlabel=\notelabel
+  \let \CTU@framedlabel=\CTU@notelabel
   \CTU@beginframed}
-\def \endnote {\CTU@endframed \endenv{CTU@note}}
 
-%==========%
-% Warnings %
-%==========%
-
-\def \warnlabel {Important}
-
-\def \warnicon {%
-  \pdfliteral{q}% begin PDF group
-  \pdfliteral{%
-    % scale 1bp -> 1pt
-    0.996264 0 0.996264 0 0 0 cm
-    1 w   0 j    0 J
-    % triangle
-    11 5.5 m   11.5 6.5 12.5 6.5 13 5.5 c   23 -14.5 l
-    23.5 -15.5 23 -16.5 22 -16.5 c
-    2 -16.5 l   1 -16.5 0.5 -15.5 1 -14.5 c   h   S
-    % exclamation mark
-    11 -14 2 1.8 re   11.3 -11.1 m   12.7 -11.1 l   13 -5.5 l   13 0 l   11 0 l
-    11 -5.5 l   h   f
-    % end PDF group
-    Q}}
-
-\def \beginwarn {%
+\def \CTU@beginwarn {%
   \beginenv{CTU@warn}%
-  \let \CTU@framedicon=\warnicon
+  \let \CTU@framedicon=\CTU@warnicon
   \let \CTU@framedsiderulecolor=\CtuOrange
   \let \CTU@framedbgcolor=\CtuOrangeLLLL
-  \let \CTU@framedlabel=\warnlabel
+  \let \CTU@framedlabel=\CTU@warnlabel
   \CTU@beginframed}
-\def \endwarn {\CTU@endframed \endenv{CTU@warn}}
+
+%----------------%
+% \end... macros %
+%----------------%
+
+\def \CTU@endnote {\CTU@endframed \endenv{CTU@note}}
+\def \CTU@endwarn {\CTU@endframed \endenv{CTU@warn}}

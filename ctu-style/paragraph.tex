@@ -1,0 +1,20 @@
+%==================%
+% Named paragraphs %
+%==================%
+
+\newdimen \CTU@paragraphindent
+
+\CTU@paragraphindent=1em
+\def \CTU@paragraphbulletcolor {}
+\def \CTU@paragraphnamestyle {}
+
+\def \CTU@paragraph {\bgroup \catcode`\^^M=13 \paragraphA}
+{\catcode`\^^M=13 \gdef\paragraphA#1^^M{\egroup \CTU@printparagraph{#1}}}
+\def \CTU@printparagraph #1{%
+  \skiplines 1 \par\noindent
+  \hbox to\CTU@paragraphindent {%
+    \CTU@paragraphbulletcolor
+    \vrule height 1.1ex depth-.1ex width 1ex
+    \hfil}%
+  {\CTU@paragraphnamestyle #1}%
+  \quad \ignorepar}
