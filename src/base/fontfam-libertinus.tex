@@ -3,18 +3,18 @@
 %===========%
 
 % Sub-family
-\def \Libertinus@serif      {\edef\Libertinus@@subfam{Serif}}
-\def \Libertinus@sans       {\edef\Libertinus@@subfam{Sans}}
-\def \Libertinus@mono       {\edef\Libertinus@@subfam{Mono}}
+\def \Libertinus@serif      {\edef \Libertinus@@subfam {Serif}}
+\def \Libertinus@sans       {\edef \Libertinus@@subfam {Sans}}
+\def \Libertinus@mono       {\edef \Libertinus@@subfam {Mono}}
 
 % Font weight
-\def \Libertinus@regular    {\edef\Libertinus@@weight{Regular}}
-\def \Libertinus@semibold   {\edef\Libertinus@@weight{Semibold}}
-\def \Libertinus@bold       {\edef\Libertinus@@weight{Bold}}
+\def \Libertinus@regular    {\edef \Libertinus@@weight {Regular}}
+\def \Libertinus@semibold   {\edef \Libertinus@@weight {Semibold}}
+\def \Libertinus@bold       {\edef \Libertinus@@weight {Bold}}
 
 % Italic font
-\def \Libertinus@upright    {\edef\Libertinus@@style{}}
-\def \Libertinus@italic     {\edef\Libertinus@@style{Italic}}
+\def \Libertinus@upright    {\edef \Libertinus@@style {}}
+\def \Libertinus@italic     {\edef \Libertinus@@style {Italic}}
 
 % Defaults
 \Libertinus@serif \Libertinus@regular \Libertinus@upright
@@ -47,18 +47,5 @@
 % The switch %
 %============%
 
-% Auxiliary definitions
-\def \Libertinus@makepublic #1{%
-  \ea\let \ea#1\csname Libertinus@\csstring#1\endcsname}
-\def \Libertinus@publicmacros {%
-  \serif \sans \mono \regular \semibold \bold \upright \italic \currfontname
-  \currmathfontname \fontcleanup}
-
-% Font setup & cleanup
-\def \Libertinus@fontcleanup {%
-  \ea\foreach \ea{\Libertinus@publicmacros}\undef}
-\def \Libertinus@fontsetup {%
-  \ea\foreach \ea{\Libertinus@publicmacros}\Libertinus@makepublic}
-
-% The switch
-\def \Libertinus {\fontcleanup \Libertinus@fontsetup}
+\def \Libertinus@@makepublic #1{\ea\let \ea#1\csname Libertinus@\csstring#1\endcsname}
+\def \Libertinus {\ea\foreach \ea{\fontpubmacros}\Libertinus@@makepublic}

@@ -1,23 +1,8 @@
-% Auxiliary macros
-\edef \KpFonts@@seriffam {Roman}
-\edef \KpFonts@@regularweight {Regular}
-\edef \KpFonts@@italicstyle {Italic}
-\def \KpFonts@@publicmacros {%
-  \serif \sans \mono
-  \upright \italic
-  \lightserif \regularserif \semiboldserif \boldserif \regularsans \boldsans
-  \light \regular \semibold \bold
-  \smallcaps \nosmallcaps
-  \mathaltscript \mathstdscript
-  \currfontname \currmathfontname \fontcleanup}
-\def\KpFonts@@makepublic#1{%
-  \ea\let\ea#1\csname KpFonts@\csstring#1\endcsname}
-
 %===========%
 % Modifiers %
 %===========%
 
-% Sub-families
+% Sub-family
 \def \KpFonts@serif {%
   \def \KpFonts@@weight {\KpFonts@@serifweight}%
   \edef \KpFonts@@subfam {Roman}}
@@ -29,18 +14,18 @@
   \edef \KpFonts@@subfam {Mono}}
 
 % Style variants
-\def \KpFonts@upright       {\edef \KpFonts@@style {}}
-\def \KpFonts@italic        {\edef \KpFonts@@style {Italic}}
+\def \KpFonts@upright       {\edef\KpFonts@@style{}}
+\def \KpFonts@italic        {\edef\KpFonts@@style{Italic}}
 
 % Serif font weight variants
-\def \KpFonts@lightserif    {\edef \KpFonts@@serifweight {Light}}
-\def \KpFonts@regularserif  {\edef \KpFonts@@serifweight {Regular}}
-\def \KpFonts@semiboldserif {\edef \KpFonts@@serifweight {Semibold}}
-\def \KpFonts@boldserif     {\edef \KpFonts@@serifweight {Bold}}
+\def \KpFonts@lightserif    {\edef\KpFonts@@serifweight{Light}}
+\def \KpFonts@regularserif  {\edef\KpFonts@@serifweight{Regular}}
+\def \KpFonts@semiboldserif {\edef\KpFonts@@serifweight{Semibold}}
+\def \KpFonts@boldserif     {\edef\KpFonts@@serifweight{Bold}}
 
 % Sans-serif & monospace font weight variants
-\def \KpFonts@regularsans   {\edef \KpFonts@@sansweight {Regular}}
-\def \KpFonts@boldsans      {\edef \KpFonts@@sansweight {Bold}}
+\def \KpFonts@regularsans   {\edef\KpFonts@@sansweight{Regular}}
+\def \KpFonts@boldsans      {\edef\KpFonts@@sansweight{Bold}}
 
 % Font weight variants
 \def \KpFonts@light         {\KpFonts@regularsans \KpFonts@lightserif}
@@ -52,7 +37,19 @@
 \def \KpFonts@mathaltscript {\edef \KpFonts@@mathscript {+ss01;}}
 \def \KpFonts@mathstdscript {\edef \KpFonts@@mathscript {}}
 
-% \currfontname
+% Defaults
+\KpFonts@serif \KpFonts@upright \KpFonts@regular \KpFonts@mathstdscript
+
+%===========%
+% Font name %
+%===========%
+
+% Auxiliary macros
+\edef \KpFonts@@seriffam {Roman}
+\edef \KpFonts@@regularweight {Regular}
+\edef \KpFonts@@italicstyle {Italic}
+
+% Normal font
 \def \KpFonts@currfontname {%
   [Kp\KpFonts@@subfam-%
   \ea\ifx \KpFonts@@weight\KpFonts@@regularweight
@@ -61,8 +58,8 @@
   \else
     \KpFonts@@weight\KpFonts@@style
   \fi]:}
-0
-% \currmathfontname
+
+% Math font
 \def \KpFonts@currmathfontname {%
   [KpMath-%
   \ifx \KpFonts@@subfam\KpFonts@@seriffam
@@ -73,15 +70,9 @@
     \else \KpFonts@@weight \fi
   \fi]:\KpFonts@@mathscript}
 
-% Cleanup
-\def \KpFonts@fontcleanup {%
-  \ea\foreach\ea{\KpFonts@@publicmacros}\undef}
+%============%
+% The switch %
+%============%
 
-% Selector
-\def \KpFonts {%
-  \fontcleanup
-  \ea\foreach\ea{\KpFonts@@publicmacros}\KpFonts@@makepublic}
-
-% Defaults
-\KpFonts@serif \KpFonts@upright \KpFonts@regular \KpFonts@nosmallcaps
-\KpFonts@mathstdscript
+\def \KpFonts@@makepublic #1{\ea\let \ea#1\csname KpFonts@\csstring#1\endcsname}
+\def \KpFonts {\ea\foreach\ea{\fontpubmacros}\KpFonts@@makepublic}

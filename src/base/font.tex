@@ -6,56 +6,53 @@
 %===========%
 
 \newdimen \currfontsize
-
-% Default values
 \currfontsize=10pt
 \baselineskip=12pt
-
-% Setting font size
-\def \typosize [#1/#2]{%
-  \currfontsize=#1pt
-  \baselineskip=#2pt\relax}
-
-% Scaling font size
-\def \typoscale [#1/#2]{%
-  \currfontsize=#1\currfontsize
-  \baselineskip=#1\baselineskip \relax}
 
 %===============%
 % Font features %
 %===============%
 
 % Default ligatures (liga)
-\def \enablefontligs {\def\fontfeat@liga{}}
-\def \disablefontligs {\def\fontfeat@liga{-liga;}}
+\def \enablefontligs {\def\@ffliga{}}
+\def \disablefontligs {\def\@ffliga{-liga;}}
 
 % Small capitals (smcp)
-\def \enablesmallcaps {\def\fontfeat@smcp{+smcp;}}
-\def \disablesmallcaps {\def\fontfeat@smcp{}}
+\def \enablesmallcaps {\def\@ffsmcp{+smcp;}}
+\def \disablesmallcaps {\def\@ffsmcp{}}
 
 % Artificial bold
-\def \emboldenfont #1{\def\fontfeat@embolden{embolden=#1;}}
-\def \noemboldenfont {\def\fontfeat@embolden{}}
+\def \emboldenfont #1{\def\@ffembolden{embolden=#1;}}
+\def \noemboldenfont {\def\@ffembolden{}}
 
 % Ligatures implemented by luaotfload.sty (tlig), same as in Computer Modern
 % fonts
-\def \enabletexligs {\def\fontfeat@tlig{+tlig;}}
-\def \disabletexligs {\def\fontfeat@tlig{}}
+\def \enabletexligs {\def\@fftlig{+tlig;}}
+\def \disabletexligs {\def\@fftlig{}}
 
 % Default settings
 \enablefontligs \enabletexligs \disablesmallcaps \noemboldenfont
 
 % Suppressing unwanted ligatures
-\def \suppresslig {\nobreak \null \nobreak}
+\def \suppresslig {\nobreak\null\nobreak}
 
 %===========================%
 % \fontcleanup, \selectfont %
 %===========================%
 
-% When no OpenType font is loaded, there is nothing to do
-\let \fontcleanup=\relax
+\def \fontpubmacros {\currmathfontname \currfontname \fontcleanup}
 
 \def \selectfont {%
-  \font \currfont=\currfontname \fontfeat@liga \fontfeat@tlig \fontfeat@smcp
-    \fontfeat@embolden \space at\currfontsize
-  \currfont}
+  \font \@currfont=\currfontname \@ffliga \@fftlig \@ffsmcp \@ffembolden \space at\currfontsize
+  \@currfont}
+
+\chardef \mainmathfam=0
+
+\def \selectmathfont {%
+  \font \@tenmath=\currmathfontname \@ffembolden mode=base;script=math;ssty=0;mathsize=1; at\currfontsize
+  \font \@sevenmath=\currmathfontname \@ffembolden mode=base;script=math;ssty=1;mathsize=2; at\currfontsize
+  \font \@fivemath=\currmathfontname \@ffembolden mode=base;script=math;ssty=2;mathsize=3; at\currfontsize
+  \textfont\mainmathfam=\@tenmath
+  \scriptfont\mainmathfam=\@sevenmath
+  \scriptscriptfont\mainmathfam=\@fivemath
+  \fam=\mainmathfam\relax}
