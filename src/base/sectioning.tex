@@ -3,6 +3,11 @@
 \newcount \sectionnum       \sectionnum=0
 \newcount \subsectionnum    \subsectionnum=0
 
+% Current chapter, section and subsection number
+\let \currchapternum \empty
+\let \currsectionnum \empty
+\let \currsubsectionnum \empty
+
 % Chapter to appendix switching
 \let \ifappendix=\iffalse
 \def \appendices {\chapternum=0 \let\ifappendix\iftrue}
