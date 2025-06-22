@@ -70,7 +70,7 @@
 % #4 ... object name
 \def \writeref #1#2#3#4{%
   \reflastskip=\lastskip
-  \ifdim \lastskip=\z@ \else \vskip -\lastskip \fi
+  \ifdim \reflastskip=\z@ \else \nobreak \vskip-\reflastskip \relax \fi
   \edef\writerefZ{#1}%
   \ifx \writerefZ\empty \else
     \ifcondition\labelexists{#1}\else
@@ -82,7 +82,7 @@
     \write \reffile {%
       \string\Xref {#1}{#2}{#3}{\protectedtokens}{\noexpand\folio}}}%
   \writerefZ \undef\writerefZ
-  \ifdim \reflastskip=\z@ \else \vskip\reflastskip\relax \fi}
+  \ifdim \reflastskip=\z@ \else \nobreak \vskip\reflastskip \relax \fi}
 
 
 %==========================%
