@@ -62,7 +62,7 @@
 \def \ignorespacetoksA {\futurelet\tmptokenA\ignorespacetoksB}
 % \ignorespacetoksB decides what to do based on what \tmptokenA is
 \def \ignorespacetoksB {%
-  \ifcat\space\tmptokenA \ea\ignorespacetoksC
+  \ifcat\space \noexpand\tmptokenA \ea\ignorespacetoksC
   \else \ea\afterignore \fi}
 % \ignorespacetoksC gobbles the space and "inserts" \ignorespacetoksA token
 \def \ignorespacetoksC {\afterassignment\ignorespacetoks \let\tmptokenA= }
