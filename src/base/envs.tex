@@ -7,5 +7,5 @@
 \def \endenvA #1{%
   \edef\@reqenv{#1}%
   \ifx \@reqenv\@currenv \else
-    \error{Environment '\@currenv' ended by '\@reqenv'}%
+    \errmessage{Environment '\@currenv' ended by '\@reqenv'}%
   \fi \endgroup}
