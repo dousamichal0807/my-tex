@@ -141,16 +141,16 @@
 \def \CTU@beginnote {%
   \beginenv{CTU@note}%
   \let \CTU@framedicon=\CTU@noteicon
-  \let \CTU@framedbgcolor=\CtuBlueLLLL
-  \let \CTU@framedsiderulecolor=\CtuBlue
+  \let \CTU@framedbgcolor=\CTU@BlueLLLL
+  \let \CTU@framedsiderulecolor=\CTU@Blue
   \let \CTU@framedlabel=\CTU@notelabel
   \CTU@beginframed}
 
 \def \CTU@beginwarn {%
   \beginenv{CTU@warn}%
   \let \CTU@framedicon=\CTU@warnicon
-  \let \CTU@framedsiderulecolor=\CtuOrange
-  \let \CTU@framedbgcolor=\CtuOrangeLLLL
+  \let \CTU@framedsiderulecolor=\CTU@Orange
+  \let \CTU@framedbgcolor=\CTU@OrangeLLLL
   \let \CTU@framedlabel=\CTU@warnlabel
   \CTU@beginframed}
 
@@ -160,3 +160,46 @@
 
 \def \CTU@endnote {\CTU@endframed \endenv{CTU@note}}
 \def \CTU@endwarn {\CTU@endframed \endenv{CTU@warn}}
+
+%==================%
+% Framed equations %
+%==================%
+
+\newcount \CTU@framedeqlines
+\newbox   \CTU@framedeqbox
+\newdimen \CTU@framedeqboxht
+
+\def \CTU@beginframedeq {%
+  \endgraf \beginenv{CTU@framedeq}%
+  \afterassignment\CTU@beginframedeqA
+  \CTU@framedeqlines=}
+\def \CTU@beginframedeqA {%
+  \skiplines 1 \nobreak\null \nobreak\vskip-\baselineskip
+  \CTU@framedeqboxht \the\CTU@framedeqlines\baselineskip
+  \advance \CTU@framedeqboxht -\baselineskip
+  \advance \CTU@framedeqboxht \topskip
+  \setbox\CTU@framedeqbox \vtop to\CTU@framedeqboxht \bgroup
+    \advance \hsize by-2\CTU@framedhpadding
+    \advance \hsize by-\CTU@framedsiderulewidth
+    \null\vss \leavevmode\strut \hfill \null $$}
+
+\def \CTU@endframedeq {%
+  $$\strut\endgraf \vss \skiplines 1 \leavevmode\strut\endgraf \egroup
+  \setbox\CTU@framedeqbox \hbox{%
+    {\gray[0.95]\vrule width\hsize
+      height\dimexpr \topskip+\CTU@framedvpadding
+      depth\dimexpr \the\CTU@framedeqlines\baselineskip
+        -\baselineskip+\CTU@framedvpadding \relax}%
+    \hskip -\hsize
+    {\CTU@BlackLL \vrule width\CTU@framedsiderulewidth
+      height\dimexpr \topskip+\CTU@framedvpadding
+      depth\dimexpr \the\CTU@framedeqlines\baselineskip
+        -\baselineskip+\CTU@framedvpadding \relax}%
+    \hskip\CTU@framedhpadding \box\CTU@framedeqbox \hskip\CTU@framedhpadding}%
+  \ht\CTU@framedeqbox\z@ \dp\CTU@framedeqbox\z@
+  \noindent \lower.1\baselineskip \box\CTU@framedeqbox \endgraf
+  \nobreak \skiplines \CTU@framedeqlines
+  \nobreak \vskip -2\baselineskip
+  \nobreak \null
+  \endenv{CTU@framedeq}%
+  \skiplines 1\relax}
