@@ -1,75 +1,73 @@
+%===========%
+% Mathcodes %
+%===========%
+
 \newcount \charcount
 \newcount \charno
 \newcount \mathcharatomtype
-\newcount \mathcharfam
 \newcount \mathcharno
 
-\def \incrchardef #1{\chardef#1\charno \advance\charno1\relax}
-
-% Sets \Umathcode based on values of \charno, \mathcharatomtype, \mathcharfam
-% and \mathcharno 
-\def \setregmathcode {\Umathcode\charno \mathcharatomtype\mathcharfam\mathcharno \relax}
+\def \setregmathcode {%
+  \Umathcode\charno \mathcharatomtype\z@\mathcharno \relax}
 
 \def \bulksetmathcode {%
   \ifnum \charcount>\z@
     \setregmathcode
-    \advance \charcount -1%
-    \advance \charno 1%
-    \advance \mathcharno 1%
-    \relax \bulksetmathcode
+    \advance\charcount\m@ne
+    \advance\charno\@ne
+    \advance\mathcharno\@ne
+    \bulksetmathcode
   \fi}
 
-% Sets the "math alternative" of given character. Syntax:
-%   \setmathchar <character> <math character codepoint>.
-% Math font family number and math atom type are taken from \mathcharfam and
-% \mathcharatomtype. 
-\def \setmathchar {\afterassignment\setmathcharA \charno=}
-\def \setmathcharA {\afterassignment\setregmathcode \mathcharno=}
+\def \setmathchar {\afterassignment\setmathchar@A \charno=}
+\def \setmathchar@A {\afterassignment\setregmathcode \mathcharno=}
 
-% Defines given control sequence to be a mathemathical character. Syntax:
-%     \definemathchar <control sequence> <math atom type> <math character codepoint>
-% Math font family number is taken from \mathcharfam. 
-\def \definemathchar #1{\def\@mathcharname{#1}\afterassignment\definemathcharA \mathcharatomtype=}
-\def \definemathcharA {\afterassignment\definemathcharB \mathcharno=}
-\def \definemathcharB {\ea\Umathchardef\@mathcharname\mathcharatomtype\mathcharfam\mathcharno\relax}
+\def \definemathchar #1{%
+  \def\@mathcharname{#1}%
+  \afterassignment\definemathcharA \mathcharatomtype=}
+\def \definemathcharA {%
+  \afterassignment\definemathcharB \mathcharno=}
+\def \definemathcharB {%
+  \expandafter\Umathchardef \@mathcharname
+  \mathcharatomtype\z@\mathcharno \relax}
 
-% Sets the "math alternative" of given character. Syntax:
-%   \setmathcode <character codepoint> <atom type> <math character codepoint>.
-% Math font family number is taken from \mathcharfam. 
-\def \setmathcode {\afterassignment\setmathcodeA \charno=}
-\def \setmathcodeA {\afterassignment\setmathcodeB \mathcharatomtype=}
-\def \setmathcodeB {\afterassignment\setregmathcode \mathcharno=}
+\def \setmathcode {\afterassignment\setmathcode@A \charno=}
+\def \setmathcode@A {\afterassignment\setmathcode@B \mathcharatomtype=}
+\def \setmathcode@B {\afterassignment\setregmathcode \mathcharno=}
 
 %-------%
 % ASCII %
 %-------%
 
 % Sets \mathcodes for various ASCII characters. ASCII digits, uppercase and
-% lowercase letters are handled by selectors later. Math characters will be
-% taken from family defined by \mathcharfam.
-\def \setasciimathcodes {%
-  \setmathcode "00028 "4 "00028% (
-  \setmathcode "00029 "5 "00029% )
-  \setmathcode "0002A "2 "02217% *
-  \setmathcode "0002B "2 "0002B% +
-  \setmathcode "0002C "6 "0002C% ,
-  \setmathcode "0002D "2 "02212% -
-  \setmathcode "0002E "0 "0002E% .
-  \setmathcode "0002F "0 "02215% /
-  \setmathcode "0003A "3 "0003A% :
-  \setmathcode "0003B "6 "0003B% ;
-  \setmathcode "0003C "3 "0003C% <
-  \setmathcode "0003D "3 "0003D% =
-  \setmathcode "0003E "3 "0003E% >
-  \setmathcode "0003F "5 "0003F% ?
-  \setmathcode "0005B "4 "0005B% [
-  \setmathcode "0005C "0 "0005C% \
-  \setmathcode "0005D "5 "0005D% ]
-  \setmathcode "0007B "4 "0007B% {
-  \setmathcode "0007C "0 "0007C% |
-  \setmathcode "0007D "5 "0007D% }
-  \relax}
-\setasciimathcodes
+% lowercase letters are handled by selectors later. Single-quote character is
+% active in math, therefore no \mathcode is set.
+
+\setmathcode "21  5 "0021 % !
+\setmathcode "23  0 "0023 % #
+\setmathcode "24  0 "0024 % $
+\setmathcode "25  0 "0024 % %
+\setmathcode "26  0 "0024 % &
+\setmathcode "28  4 "0028 % (
+\setmathcode "29  5 "0029 % )
+\setmathcode "2A  2 "2217 % *
+\setmathcode "2B  2 "002B % +
+\setmathcode "2C  6 "002C % ,
+\setmathcode "2D  2 "2212 % -
+\setmathcode "2E  0 "002E % .
+\setmathcode "2F  0 "002F % /
+\setmathcode "3A  3 "003A % :
+\setmathcode "3B  6 "003B % ;
+\setmathcode "3C  3 "003C % <
+\setmathcode "3D  3 "003D % =
+\setmathcode "3E  3 "003E % >
+\setmathcode "3F  5 "003F % ?
+\setmathcode "5B  4 "005B % [
+\setmathcode "5C  0 "005C % \
+\setmathcode "5D  5 "005D % ]
+\setmathcode "7B  4 "007B % {
+\setmathcode "7C  0 "007C % |
+\setmathcode "7D  5 "007D % }
 
 %-------%
 % Greek %
@@ -77,123 +75,163 @@
 
 % Lower and upper greek letters as they appear in Unicode range for Greek and
 % Coptic (i.e. starting from U+00391 and U+003B1).
+
 \def \lowergreekletters {%
   \alpha \beta \gamma \delta \epsilon \zeta \eta \theta \iota \kappa \lambda \mu
   \nu \xi \omicron \pi \rho \finsigma \sigma \tau \upsilon \phi \chi \psi \omega}
 \def \uppergreekletters {%
   \Alpha \Beta \Gamma \Delta \Epsilon \Zeta \Eta \Theta \Iota \Kappa \Lambda \Mu
-  \Nu \Xi \Omicron \Pi \Rho \unused \Sigma \Tau \Upsilon \Phi \Chi \Psi \Omega}
+  \Nu \Xi \Omicron \Pi \Rho \@@unused \Sigma \Tau \Upsilon \Phi \Chi \Psi \Omega}
 
+\def \incrchardef #1{\chardef#1\charno \advance\charno1\relax}
 \charno="00391 \ea\foreach \ea{\uppergreekletters} \incrchardef
 \charno="003B1 \ea\foreach \ea{\lowergreekletters} \incrchardef
-\let \unused=\@@undefined
+\undef\@@unused
 
-%-------------------------------------------%
-% Unicode math symbols (U+2200 and further) %
-%-------------------------------------------%
 
-\def \defineunimathsymbols {%
-  \definemathchar \forall           "0 "02200
-  \definemathchar \complement       "0 "02201
-  \definemathchar \partial          "7 "02202
-  \definemathchar \exists           "0 "02203
-  \definemathchar \notexists        "0 "02204
-  \definemathchar \emptyset         "0 "02205
-  \definemathchar \increment        "0 "02206
-  \definemathchar \nabla            "7 "02207
-  \definemathchar \in               "3 "02208
-  \definemathchar \notin            "3 "02209
-  \definemathchar \smallin          "3 "0220A
-  \definemathchar \ni               "3 "0220B
-  \definemathchar \notni            "3 "0220C
-  \definemathchar \smallni          "3 "0220D
-  \definemathchar \qed              "0 "0220E
-  \definemathchar \prod             "1 "0220F
-  \definemathchar \coprod           "1 "02210
-  \definemathchar \sum              "1 "02211
-  \definemathchar \minusplus        "2 "02213
-  \definemathchar \dotplus          "2 "02214
-  \definemathchar \revslash         "0 "02215
-  \definemathchar \setminus         "2 "02216
-  \definemathchar \circ             "2 "02218
-  \definemathchar \bullet           "2 "02219
-  \definemathchar \propto           "2 "0221D
-  \definemathchar \infty            "0 "0221E
-  \definemathchar \land             "2 "02227
-  \definemathchar \lor              "2 "02228
-  \definemathchar \cap              "2 "02229
-  \definemathchar \cup              "2 "0222A
-  \definemathchar \coloneq          "2 "02254
-  \definemathchar \eqcolon          "2 "02255
-  \definemathchar \cdot             "2 "022C5
-  \relax}
-\defineunimathsymbols
+% U+2190: Arrows
+
+\definemathchar \leftarrow        3 "2190
+\definemathchar \uparrow          3 "2191
+\definemathchar \rightarrow       3 "2192
+\definemathchar \downarrow        3 "2193
+\definemathchar \leftrightarrow   3 "2194
+\definemathchar \updownarrow      3 "2195
+\definemathchar \tickleftarrow    3 "21A4
+\definemathchar \tickuparrow      3 "21A5
+\definemathchar \tickrightarrow   3 "21A6
+\definemathchar \tickdownarrow    3 "21A7
+
+\let \to=\rightarrow
+\let \mapsto=\tickrightarrow
+
+
+% U+2200: Matematical operators
+
+\definemathchar \forall       0 "2200
+\definemathchar \complement   0 "2201
+\definemathchar \partial      0 "2202
+\definemathchar \exists       0 "2203
+\definemathchar \notexists    0 "2204
+\definemathchar \emptyset     0 "2205
+\definemathchar \increment    0 "2206
+\definemathchar \nabla        0 "2207
+\definemathchar \in           3 "2208
+\definemathchar \notin        3 "2209
+\definemathchar \smallin      3 "220A
+\definemathchar \ni           3 "220B
+\definemathchar \notni        3 "220C
+\definemathchar \smallni      3 "220D
+\definemathchar \qed          0 "220E
+\definemathchar \prod         1 "220F
+\definemathchar \coprod       1 "2210
+\definemathchar \sum          1 "2211
+\definemathchar \minusplus    2 "2213
+\definemathchar \dotplus      2 "2214
+\definemathchar \revslash     0 "2215
+\definemathchar \setminus     2 "2216
+\definemathchar \circ         2 "2218
+\definemathchar \bullet       2 "2219
+\definemathchar \propto       2 "221D
+\definemathchar \infty        0 "221E
+\definemathchar \land         2 "2227
+\definemathchar \lor          2 "2228
+\definemathchar \cap          2 "2229
+\definemathchar \cup          2 "222A
+\definemathchar \intop        1 "222B
+\definemathchar \iintop       1 "222C
+\definemathchar \iiintop      1 "222D
+\definemathchar \ointop       1 "222E
+\definemathchar \oiintop      1 "222F
+\definemathchar \oiiintop     1 "2230
+\definemathchar \sim          3 "223C
+\definemathchar \coloneq      2 "2254
+\definemathchar \eqcolon      2 "2255
+\definemathchar \leq          3 "2264
+\definemathchar \geq          3 "2265
+\definemathchar \leqq         3 "2266
+\definemathchar \geqq         3 "2267
+\definemathchar \lneqq        3 "2268
+\definemathchar \gneqq        3 "2269
+\definemathchar \cdot         2 "22C5
+
+\let \le=\leq
+\let \ge=\geq
+
+\def \int    {\intop    \nolimits}
+\def \iint   {\iintop   \nolimits}
+\def \iiint  {\iiintop  \nolimits}
+\def \oint   {\ointop   \nolimits}
+\def \oiint  {\oiintop  \nolimits}
+\def \oiiint {\oiiintop \nolimits}
 
 %-----------%
 % Selectors %
 %-----------%
 
 \def \mathrmdigits {%
-  \mathcharatomtype="7 \mathcharno="00030
-  \charcount=10 \charno="00030 \bulksetmathcode}
+  \mathcharatomtype\z@ \mathcharno"30
+  \charcount10 \charno"30 \bulksetmathcode}
 \def \mathrmLatin {%
-  \mathcharatomtype="7 \mathcharno="00041
-  \charcount=26 \charno="00041 \bulksetmathcode}
+  \mathcharatomtype\z@ \mathcharno"41
+  \charcount26 \charno"41 \bulksetmathcode}
 \def \mathrmlatin {%
-  \mathcharatomtype="7 \mathcharno="00061
-  \charcount=26 \charno="00061 \bulksetmathcode}
+  \mathcharatomtype\z@ \mathcharno="61
+  \charcount26 \charno"61 \bulksetmathcode}
 \def \mathrmGreek {%
-  \mathcharatomtype="7 \mathcharno="00391
-  \charcount=25 \charno="00391 \bulksetmathcode}
+  \mathcharatomtype\z@ \mathcharno"391
+  \charcount25 \charno"391 \bulksetmathcode}
 \def \mathrmgreek {%
-  \mathcharatomtype="7 \mathcharno="003B1
-  \charcount=25 \charno="003B1 \bulksetmathcode}
+  \mathcharatomtype\z@ \mathcharno"3B1
+  \charcount25 \charno"3B1 \bulksetmathcode}
 
 \def \mathitLatin {%
-  \mathcharatomtype="7 \mathcharno="1D434
-  \charcount=26 \charno="00041 \bulksetmathcode
-  \setmathchar "00068 "0210E } % h
+  \mathcharatomtype\z@ \mathcharno"1D434
+  \charcount26 \charno"41 \bulksetmathcode
+  \setmathchar "00068"0210E% h
+  \relax}
 \def \mathitlatin {%
-  \mathcharatomtype="7 \mathcharno="1D44E
+  \mathcharatomtype\z@ \mathcharno="1D44E
   \charcount=26 \charno="00061 \bulksetmathcode}
 \def \mathitGreek {%
-  \mathcharatomtype="7 \mathcharno="1D6E2
+  \mathcharatomtype\z@ \mathcharno="1D6E2
   \charcount=25 \charno="00391 \bulksetmathcode}
 \def \mathitgreek {%
-  \mathcharatomtype="7 \mathcharno="1D6FC
-  \charcount=25 \charno="003B1 \bulksetmathcode}
+  \mathcharatomtype\z@ \mathcharno="1D6FC
+  \charcount25 \charno"3B1 \bulksetmathcode}
 
 \def \mathbfdigits {%
-  \mathcharatomtype="7 \mathcharno="1D7CE
-  \charcount=10 \charno="00030 \bulksetmathcode}
+  \mathcharatomtype\z@ \mathcharno="1D7CE
+  \charcount10 \charno"30 \bulksetmathcode}
 \def \mathbfLatin {%
-  \mathcharatomtype="7 \mathcharno="1D400
-  \charcount=26 \charno="00041 \bulksetmathcode}
+  \mathcharatomtype\z@ \mathcharno="1D400
+  \charcount26 \charno"41 \bulksetmathcode}
 \def \mathbflatin {%
-  \mathcharatomtype="7 \mathcharno="1D41A
-  \charcount=26 \charno="00061 \bulksetmathcode}
+  \mathcharatomtype\z@ \mathcharno="1D41A
+  \charcount26 \charno"61 \bulksetmathcode}
 \def \mathbfGreek {%
-  \mathcharatomtype="7 \mathcharno="1D6A8
-  \charcount=25 \charno="00391 \bulksetmathcode}
+  \mathcharatomtype\z@ \mathcharno"1D6A8
+  \charcount25 \charno"391 \bulksetmathcode}
 \def \mathbfgreek {%
-  \mathcharatomtype="7 \mathcharno="1D6C2
-  \charcount=25 \charno="003B1 \bulksetmathcode}
+  \mathcharatomtype\z@ \mathcharno="1D6C2
+  \charcount25 \charno"3B1 \bulksetmathcode}
 
 \def \mathdsdigits {%
-  \mathcharatomtype="7 \mathcharfam="0 \mathcharno="1D7D8
-  \charcount=10 \charno="00030 \bulksetmathcode}
+  \mathcharatomtype\z@ \mathcharno="1D7D8
+  \charcount=10 \charno"30 \bulksetmathcode}
 \def \mathdsLatin {%
-  \mathcharatomtype="7 \mathcharfam="0 \mathcharno="1D538
-  \charcount=26 \charno="00041 \bulksetmathcode
-  \setmathchar "00043 "02102  % C 
-  \setmathchar "00048 "0210D  % H
-  \setmathchar "0004E "02115  % N
-  \setmathchar "00050 "02119  % P
-  \setmathchar "00051 "0211A  % Q
-  \setmathchar "00052 "0211D  % R
-  \setmathchar "0005A "02124 }% Z
+  \mathcharatomtype\z@ \mathcharno="1D538
+  \charcount=26 \charno"41 \bulksetmathcode
+  \setmathchar "00043"02102% C
+  \setmathchar "00048"0210D% H
+  \setmathchar "0004E"02115% N
+  \setmathchar "00050"02119% P
+  \setmathchar "00051"0211A% Q
+  \setmathchar "00052"0211D% R
+  \setmathchar "0005A"02124% Z
+  \relax}
 \def \mathdslatin {%
-  \mathcharatomtype="7 \mathcharfam="0 \mathcharno="1D552
+  \mathcharatomtype="7 \mathcharno="1D552
   \charcount=26 \charno="00061 \bulksetmathcode}
 
-\mathrmdigits \mathitLatin \mathitlatin \mathrmGreek \mathitgreek 
+\mathrmdigits \mathitLatin \mathitlatin \mathrmGreek \mathitgreek
