@@ -12,9 +12,14 @@
 \let \ifappendix=\iffalse
 \def \appendices {\chapternum=0 \let\ifappendix\iftrue}
 
+% \every{chapter, section, subsection} registers
+\newtoks \everychapter
+\newtoks \everysection
+\newtoks \everysubsection
+
 % Allow suppression of numbering of the next chapter, section or subsection
 \newif \iftocnum
-\newif \iftocshow 
+\newif \iftocshow
 \def \resettocflags {\tocnumtrue \tocshowtrue}
 \resettocflags
 
@@ -40,58 +45,37 @@
 
 % The "public" macros; the optional parameter is the label that can be
 % referenced
-\def \chapter {\readoptional\chapterA}
-\def \section {\readoptional\sectionA}
-\def \subsection {\readoptional\subsectionA}
+\def \chapter {\readoptional\@chapterA}
+\def \section {\readoptional\@sectionA}
+\def \subsection {\readoptional\@subsectionA}
 
 % Chapter macro where most things are done
-\def \chapterA #1\par {%
-  \let\currchapternum\empty
-  \iftocnum
-    \incrchapternum
-    \edef\currchapternum{\thechapternum}%
-  \fi
-  \let\currchapterlabel\theoptional
-  \ifx \currchapterlabel\undefined
-    \let\currchapterlabel\empty
-  \fi
-  \printchapter{\currchapternum}{#1}%
-  \writeref{\currchapterlabel}%
-      {\ifappendix appendix\else chapter\fi \iftocshow\else *\fi}%
-      {\currchapternum}{#1}%
-  \resettocflags}
+\def \@chapterreftag {\ifappendix appendix\else chapter\fi}
+\def \@chapterA #1\par {\@dosectioning{chapter}{\@chapterreftag}{#1}}
+\def \@sectionA #1\par {\@dosectioning{section}{section}{#1}}
+\def \@subsectionA #1\par {\@dosectioning{subsection}{subsection}{#1}}
 
-% Section macro where most things are done
-\def \sectionA #1\par {%
-  \let\currsectionnum\empty
-  \iftocnum
-    \incrsectionnum
-    \edef\currsectionnum{\thesectionnum}%
-  \fi
-  \let\currsectionlabel\theoptional
-  \ifx \currsectionlabel\undefined
-    \let\currsectionlabel\empty
-  \fi
-  \printsection{\currsectionnum}{#1}%
-  \writeref{\currsectionlabel}%
-      {section\iftocshow\else *\fi}%
-      {\currsectionnum}{#1}%
+% #1 ... type of sectioning (chapter, section, subsection)
+% #2 ... *.ref file tag (appendix, chapter, section, subsection)
+% #3 ... the title
+\def \@dosectioning #1#2#3{%
+  % Auxiliary \lets and \defs
+  \expandafter\let \expandafter\@sect@incrnum \csname incr#1num\endcsname
+  \expandafter\let \expandafter\@sect@thenum  \csname the#1num\endcsname
+  \expandafter\let \expandafter\@sect@print   \csname print#1\endcsname
+  \expandafter\let \expandafter\@sect@every   \csname every#1\endcsname
+  % Get current sectioning element number
+  \let \@sect@currnum \empty
+  \iftocnum \@sect@incrnum \edef\@sect@currnum{\@sect@thenum}\fi
+  \expandafter\glet \csname curr#1num\endcsname \@sect@currnum
+  % Get *.ref file label
+  \let \@sect@currlabel \theoptional
+  \ifx \@sect@currlabel\undefined  \let\@sect@currlabel\empty  \fi
+  % Do \every#1
+  \the \@sect@every
+  % Do the printing
+  \@sect@print{\@sect@currnum}{#3}%
+  % Write to *.ref file
+  \writeref{\@sect@currlabel}{#2\iftocshow\else*\fi}{\@sect@currnum}{#3}%
+  % Reset flags
   \resettocflags}
-
-% Subsection macro where most things are done
-\def \subsectionA #1\par {%
-  \let\currsubsectionnum\empty
-  \iftocnum
-    \incrsubsectionnum
-    \edef\currsubsectionnum{\thesubsectionnum}%
-  \fi
-  \printsubsection{\currsubsectionnum}{#1}%
-  \let\currsubsectionlabel\theoptional
-  \ifx \currsubsectionlabel\undefined
-    \let\currsubsectionlabel\empty
-  \fi
-  \writeref{\currsubsectionlabel}%
-      {subsection\iftocshow\else *\fi}%
-      {\currsubsectionnum}{#1}%
-  \resettocflags}
-
