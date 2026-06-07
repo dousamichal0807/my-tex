@@ -25,7 +25,7 @@
 % Un-\def a control sequence or active character
 \def \undef #1{\let#1\undefined}
 % Define control sequence with name specified in <balanced text>
-\def \defbyname #1{\ea\def\csname#1\endcsname}
+\def \defbyname #1{\expandafter\def \csname#1\endcsname}
 
 %------------------%
 % \foreach, \xargs %
@@ -201,9 +201,17 @@
 % Other utilitity macros for layout %
 %-----------------------------------%
 
-\def \skiplines #1 {%
-  \tmpdimenA=#1\baselineskip \relax
-  \ifdim\lastskip<\tmpdimenA \removelastskip \vskip\tmpdimenA \fi}
+\newcount \@skiplinecount
+\newdimen \@skiplineamount
+\def \skiplines {
+  \afterassignment\@skiplinesA
+  \@skiplinecount=}
+\def \@skiplinesA {%
+  \@skiplineamount \the\@skiplinecount \baselineskip \relax
+  \ifdim\lastskip<\@skiplineamount
+    \removelastskip
+    \vskip\@skiplineamount
+  \fi}
 
 \long\def \ignorepar {\futurelet\ignoreparZ\ignoreparA}
 \long\def \ignoreparA {%
