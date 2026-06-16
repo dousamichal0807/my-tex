@@ -35,6 +35,11 @@
 \def \setmathcode@A {\afterassignment\setmathcode@B \mathcharatomtype=}
 \def \setmathcode@B {\afterassignment\setregmathcode \mathcharno=}
 
+\def \setdelcode {\afterassignment\setdelcode@A \charno=}
+\def \setdelcode@A {\afterassignment\regsetdelcode \mathcharno=}
+
+\def \regsetdelcode {\Udelcode\charno \z@\mathcharno}
+
 %-------%
 % ASCII %
 %-------%
@@ -69,6 +74,18 @@
 \setmathcode "7C  0 "007C % |
 \setmathcode "7D  5 "007D % }
 
+\setdelcode "28 "0028 % (
+\setdelcode "29 "0029 % )
+\setdelcode "2F "002F % /
+\setdelcode "5B "005B % [
+\setdelcode "5D "005D % ]
+\setdelcode "3C "2329 % < --> \langle
+\setdelcode "3E "232A % > --> \rangle
+\setdelcode`"5C "005C % \
+\setdelcode "7C "007C % |
+
+
+
 %-------%
 % Greek %
 %-------%
@@ -88,7 +105,6 @@
 \charno="003B1 \ea\foreach \ea{\lowergreekletters} \incrchardef
 \undef\@@unused
 
-
 % U+2190: Arrows
 
 \definemathchar \leftarrow        3 "2190
@@ -104,7 +120,6 @@
 
 \let \to=\rightarrow
 \let \mapsto=\tickrightarrow
-
 
 % U+2200: Matematical operators
 
@@ -153,11 +168,20 @@
 \definemathchar \geqq         3 "2267
 \definemathchar \lneqq        3 "2268
 \definemathchar \gneqq        3 "2269
+\definemathchar \bigland      1 "22C0
+\definemathchar \biglor       1 "22C1
+\definemathchar \bigcap       1 "22C2
+\definemathchar \bigcup       1 "22C3
 \definemathchar \cdot         2 "22C5
 
+\let \bigvee=\biglor
+\let \bigwedge=\bigland
 \let \le=\leq
 \let \ge=\geq
+\let \vee=\lor
+\let \wedge=\land
 
+\def \sqrt   {\Uradical 1"221A }
 \def \int    {\intop    \nolimits}
 \def \iint   {\iintop   \nolimits}
 \def \iiint  {\iiintop  \nolimits}
@@ -235,3 +259,8 @@
   \charcount=26 \charno="00061 \bulksetmathcode}
 
 \mathrmdigits \mathitLatin \mathitlatin \mathrmGreek \mathitgreek
+
+%-----------------%
+% Other operators %
+%-----------------%
+
