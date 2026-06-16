@@ -79,8 +79,8 @@
 \setdelcode "2F "002F % /
 \setdelcode "5B "005B % [
 \setdelcode "5D "005D % ]
-\setdelcode "3C "2329 % < --> \langle
-\setdelcode "3E "232A % > --> \rangle
+\setdelcode "3C "27E8 % < --> \langle
+\setdelcode "3E "27E9 % > --> \rangle
 \setdelcode`"5C "005C % \
 \setdelcode "7C "007C % |
 
@@ -105,7 +105,8 @@
 \charno="003B1 \ea\foreach \ea{\lowergreekletters} \incrchardef
 \undef\@@unused
 
-% U+2190: Arrows
+% Arrows
+% U+2190 -- U+21FF
 
 \definemathchar \leftarrow        3 "2190
 \definemathchar \uparrow          3 "2191
@@ -118,10 +119,13 @@
 \definemathchar \tickrightarrow   3 "21A6
 \definemathchar \tickdownarrow    3 "21A7
 
+\let \from=\leftarrow
+\let \mappedfrom=\tickleftarrow
 \let \to=\rightarrow
 \let \mapsto=\tickrightarrow
 
-% U+2200: Matematical operators
+% Matematical Operators
+% U+2200 -- U+22FF
 
 \definemathchar \forall       0 "2200
 \definemathchar \complement   0 "2201
@@ -181,13 +185,19 @@
 \let \vee=\lor
 \let \wedge=\land
 
-\def \sqrt   {\Uradical 1"221A }
+\def \sqrt   {\Uradical \z@ "221A }
 \def \int    {\intop    \nolimits}
 \def \iint   {\iintop   \nolimits}
 \def \iiint  {\iiintop  \nolimits}
 \def \oint   {\ointop   \nolimits}
 \def \oiint  {\oiintop  \nolimits}
 \def \oiiint {\oiiintop \nolimits}
+
+% Miscellaneous Matematical Symbols A
+% U+27C0 -- U+27EF
+
+\definemathchar \langle       4 "27E8
+\definemathchar \rangle       5 "27E9
 
 %-----------%
 % Selectors %
